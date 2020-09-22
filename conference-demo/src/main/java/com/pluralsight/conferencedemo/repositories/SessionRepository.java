@@ -1,9 +1,7 @@
 package com.pluralsight.conferencedemo.repositories;
 
 import com.pluralsight.conferencedemo.models.Session;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,24 +18,23 @@ public class SessionRepository {
     private EntityManager entityManager;
 
     public Session create(Session session) {
-        return repository.saveAndFlush(session);
 //        entityManager.persist(session);
 //        entityManager.flush();
 //        return session;
+        return repository.saveAndFlush(session);
     }
 
     public Session update(Session session) {
-        return repository.saveAndFlush(session);
-
 //        session = entityManager.merge(session);
 //        entityManager.flush();
 //        return session;
+        return repository.saveAndFlush(session);
     }
 
     public void delete(Long id) {
+        //entityManager.remove(find(id));
+        //entityManager.flush();
         repository.deleteById(id);
-//        entityManager.remove(find(id));
-//        entityManager.flush();
     }
 
     public Session find(Long id) {
@@ -46,14 +43,16 @@ public class SessionRepository {
     }
 
     public List<Session> list() {
+
         return repository.findAll();
         //return entityManager.createQuery("select s from Session s").getResultList();
     }
 
     public List<Session> getSessionsThatHaveName(String name) {
-        List<Session> ses = entityManager
-                .createQuery("select s from Session s where s.sessionName like :name")
-                .setParameter("name", "%" + name + "%").getResultList();
-        return ses;
+//        List<Session> ses = entityManager
+//                .createQuery("select s from Session s where s.sessionName like :name")
+//                .setParameter("name", "%" + name + "%").getResultList();
+//        return ses;
+        return repository.findBySessionNameContains(name);
     }
 }
