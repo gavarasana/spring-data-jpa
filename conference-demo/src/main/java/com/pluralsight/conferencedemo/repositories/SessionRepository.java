@@ -51,9 +51,10 @@ public class SessionRepository {
     }
 
     public List<Session> getSessionsThatHaveName(String name) {
-        List<Session> ses = entityManager
-                .createQuery("select s from Session s where s.sessionName like :name")
-                .setParameter("name", "%" + name + "%").getResultList();
-        return ses;
+//        List<Session> sessions = entityManager
+//                .createQuery("select s from Session s where s.sessionName like :name")
+//                .setParameter("name", "%" + name + "%").getResultList();
+//        return sessions;
+        return repository.findBySessionNameContains(name);
     }
 }
