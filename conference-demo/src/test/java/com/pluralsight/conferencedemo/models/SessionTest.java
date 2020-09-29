@@ -6,8 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.swing.plaf.SeparatorUI;
+import javax.transaction.Transactional;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -22,7 +25,11 @@ public class SessionTest {
         List<Session> sessions = repository.findBySessionNameContains("Java");
         assertTrue(sessions.size() > 0);
     }
-
+    @Test
+    public void testContainsIgnoreCase(){
+        List<Session> sessions = repository.findBySessionNameContainsIgnoreCase("java");
+        assertTrue(sessions.size() > 0);
+    }
     @Test
     public void testJpaNot() throws Exception{
         List<Session> sessions = repository.findBySessionLengthNot(30);
@@ -51,5 +58,16 @@ public class SessionTest {
     public  void testJpaLessThan() throws Exception {
         List<Session> sessions = repository.findBySessionLengthLessThan(45);
         assertTrue(sessions.size() > 0);
+    }
+
+    @Test
+    @Transactional
+    public void testJpaModifyQuery() {
+        //Keynote - The Golden Age of Software
+        String newSessionName = "Dummy session";
+        Integer numRecordsImpacted = repository.updateSessionName(1L, newSessionName);
+        assertEquals(numRecordsImpacted,1);
+        Session existingSession = repository.getOne(1L);
+        assertEquals(existingSession.getSessionName(),newSessionName);
     }
 }

@@ -1,8 +1,6 @@
 package com.pluralsight.conferencedemo.models;
 
-import com.pluralsight.conferencedemo.repositories.PricingCategoryRepository;
-import com.pluralsight.conferencedemo.repositories.TicketPriceRepository;
-import com.pluralsight.conferencedemo.repositories.TicketTypeRepository;
+import com.pluralsight.conferencedemo.repositories.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,12 +11,16 @@ import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class TicketPriceTest {
+
+    @Autowired
+    private TicketPriceJpaRepository jpaRepository;
+
     @Autowired
     private TicketPriceRepository repository;
 
@@ -57,6 +59,13 @@ public class TicketPriceTest {
         assertEquals(BigDecimal.valueOf(200, 2), otherTp.getBasePrice());
 
         repository.delete(otherTp.getTicketPriceId());
+    }
+
+    @Test
+    public void testJpaCustomSql(){
+        List<TicketPrice> ticketPriceList = jpaRepository.getTicketPricesThatIncludeWorkshop(BigDecimal.valueOf(1000));
+        assertTrue(ticketPriceList.size() > 0);
+
     }
 
 }
